@@ -1,0 +1,472 @@
+---
+title: "KeenanEarly-Erin-ADA-HOMEWORK-02"
+author: "Erin Keenan Early"
+date: "February 24, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1:
+
+Every Saturday, at the same time, a primatologist goes and sits in the forest in the morning and listens for titi monkey calls, counting the number of calls they hear in a 2 hour window from 5am to 7am. Based on previous knowledge, she believes that the mean number calls she will hear in that time is 15. Let X represent the appropriate Poisson random variable of the number of calls heard in each monitoring session.
+
+
+1.a. What is the probability that she will hear more than 8 calls during any given session?
+
+
+
+```{r}
+x<-8:30
+l<-15
+barplot(ppois(q=x, lambda = l), ylim = 0:1, space=0, names.arg = x, xlab="Number of Calls (x)", ylab="Probability of Call Frequency", main=paste0("Cumulative Probability of Titi Monkey Saturday Morning Calls\nlambda= ", 8))
+```
+
+```{r}
+x<-8
+l<-15
+ppois(q=x, lambda = l)
+```
+
+
+
+The probability that she will hear more than 8 calls is 1 minus the probability of hearing 8 or fewer calls. The probability of hearing 8 or fewer calls is 0.03744649. 
+
+```{r}
+1-0.03744649
+```
+
+She has a 96.25535% probability of hearing more than eight calls. 
+
+
+
+1.b. What is the probability that she will hear no calls in a session?
+
+```{r}
+x<-0
+l<-15
+ppois(q=x, lambda = l)
+```
+
+
+The probabily that she will hear 0 calls is 3.059023e-07.
+
+
+1.c. What is the probability that she will hear exactly 3 calls in a session?
+
+```{r}
+x<-3
+l<-15
+dpois(x, lambda = l)
+```
+
+The probability she will hear exactly 3 calls is 0.01720701%
+
+1.d. Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
+
+```{r}
+x<-0:30
+l = 15
+probset<-dpois(x=x, lambda=l)
+barplot(probset, names.arg=x, space = 0, xlab = "Number of Calls", ylab = "Probability of Call Number", main = "Saturday Morning Titi Monkey Call Frequency")
+```
+
+
+1.e. Simulate 104 results from this distribution (i.e., 2 years of Saturday monitoring sessions).
+
+```{r}
+rpois(104,15)
+```
+
+
+1.f. Plot the simulated results using hist() and use xlim() to set the horizontal limits to be from 0 to 30. How does your histogram compare to the shape of the probability mass function you plotted above?
+
+
+```{r}
+hist(rpois(104,15), xlim= c(0,30), xlab = "Number of Sat Morning Calls Over 2 Years", ylab = "Frequency of Call Number", main="Titi Monkey Call Frequency: 2 Years of Data")
+```
+This plot is not as perfectly normally distributed as the probability mass function. This is because Poisson distribution plots a model of call frequency within the given parameters, while the rpois histogram plotted a random sample of "real data" call freuquency within the established parameters. 
+
+
+## Question 2
+
+```{r}
+library(readr)
+zombie<- read_csv("https://raw.githubusercontent.com/difiore/ADA-2019/master/zombies.csv", col_names=TRUE)
+```
+
+2.a. Calculate the population mean and standard deviation for each quantitative random variable (height, weight, age, number of zombies killed, and years of education).
+
+Height:
+
+```{r}
+meanzombie<-function(h){sum((zombie$height)/1000)}
+meanzombie(h)
+```
+
+```{r}
+stdev<-function(h){sqrt((sum((zombie$height-((sum(zombie$height))/1000))^2)/1000))}
+stdev(h)
+```
+
+Weight:
+
+```{r}
+meanzombie<-function(w){sum((zombie$weight)/1000)}
+meanzombie(w)
+```
+
+```{r}
+stdev<-function(w){sqrt((sum((zombie$weight-((sum(zombie$weight))/1000))^2)/1000))}
+stdev(w)
+```
+                    
+Age:
+
+```{r}
+meanzombie<-function(a){sum((zombie$age)/1000)}
+meanzombie(a)
+```
+
+```{r}
+stdev<-function(a){sqrt((sum((zombie$age-((sum(zombie$age))/1000))^2)/1000))}
+stdev(a)
+```
+
+Number of Zombies Killed:
+
+```{r}
+meanzombie<-function(zk){sum((zombie$zombies_killed)/1000)}
+meanzombie(zk)
+```
+
+```{r}
+stdev<-function(zk){sqrt((sum((zombie$zombies_killed-((sum(zombie$zombies_killed))/1000))^2)/1000))}
+stdev(zk)
+```
+
+```{r}
+meanzombie<-function(ed){sum((zombie$years_of_education)/1000)}
+meanzombie(ed)
+```
+
+```{r}
+stdev<-function(ed){sqrt((sum((zombie$years_of_education-((sum(zombie$years_of_education))/1000))^2)/1000))}
+stdev(ed)
+```
+
+
+2.b. Use {ggplot} and make boxplots of each of these variable by gender.
+
+```{r}
+library(ggplot2)
+z<- ggplot(data=zombie, aes(x=zombie$gender, y= zombie$height))
+z<- z+geom_boxplot(na.rm=TRUE)
+z<- z+theme(axis.text.x = element_text(angle=90))
+z<- z+ylab("Height")
+z<- z+xlab("Gender")
+z
+```
+
+```{r}
+z<- ggplot(data=zombie, aes(x=zombie$gender, y=zombie$weight))
+z<- z+geom_boxplot(na.rm=TRUE)
+z<- z+theme(axis.text.x=element_text(angle=0))
+z<- z+ylab("Weight")
+z<- z+xlab("Gender")
+z
+```
+```{r}
+z<- ggplot(data=zombie, aes(x=zombie$gender, y=zombie$age))
+z<- z+geom_boxplot(na.rm=TRUE)
+z<- z+theme(axis.text.x = element_text(angle=45))
+z<- z+ylab("Age")
+z<- z+xlab("Gender")
+z
+```
+
+```{r}
+z<- ggplot(data = zombie, aes(x=zombie$gender, y=zombie$zombies_killed))
+z<- z+geom_boxplot(na.rm=TRUE)
+z<- z+theme(axis.text.x=element_text(angle=270))
+z<- z+xlab("Gender")
+z<- z+ylab("Number of Zombies Killed")
+z
+```
+```{r}
+z<- ggplot(data=zombie, aes(x=zombie$gender, y=zombie$years_of_education))
+z<- z+geom_boxplot(na.rm = TRUE)
+z<- z+theme(axis.text.x = element_text(angle=180))
+z<- z+xlab("Gender")
+z<- z+ylab("Years of Education")
+z
+```
+
+
+2.c. Use {ggplot} and make scatterplots of height and weight in relation to age. Do these variables seem to be related? In what way?
+
+```{r}
+z<- ggplot(data=zombie, aes(x=zombie$age, y=zombie$height))
+z<- z+geom_point(na.rm = TRUE)
+z<- z+xlab("Age")
+z<- z+ylab("Height")
+z<- z+geom_smooth(method = "lm", na.rm = TRUE)
+z
+```
+
+```{r}
+z<- ggplot(data = zombie, aes(x=zombie$age, y=zombie$weight))
+z<- z+geom_point(na.rm=TRUE)
+z<- z+xlab("Age")
+z<- z+ylab("Weight")
+z<- z+geom_smooth(method="lm", na.rm=TRUE)
+z
+```
+
+There is a positive correlation between age and height, which fits with reason. There is a weak positive correlation between age and weight. 
+
+
+2.d. Using histograms and Q-Q plots, check whether the quantitative variables seem to be drawn from a normal distribution. Which seem to be and which do not?
+
+```{r}
+hist(zombie$height, breaks = 20, xlab="Height", ylab="Frequency", col="purple", main = "Histogram of Survivor Height")
+```
+```{r}
+qqnorm(zombie$height, main = "QQ Plot of Survivor Height")
+```
+Height is normally distributed
+
+
+```{r}
+hist(zombie$weight, breaks = 20, xlab = "Survivor Weight", ylab="Frequency", main = "Histogram of Survivor Weight", col="green")
+```
+
+```{r}
+qqnorm(zombie$weight, main = "QQ Plot of Zombie Weight")
+```
+Weight is normally distributed.
+
+```{r}
+hist(zombie$age, breaks = 20, xlab="Survivor Age", ylab="Frequency", main = "Histogram of Survivor Age", col="pink")
+```
+
+```{r}
+qqnorm(zombie$age, main = "QQ Plot of Survivor Age")
+```
+Age is normally distributed.
+
+
+```{r}
+hist(zombie$zombies_killed, breaks = 20, xlab="Number of Zombies Killed", ylab="Frequency", main="Histogram of Number of Zombies Killed", col = "red")
+```
+
+```{r}
+qqnorm(zombie$zombies_killed, main = "QQ Plot of Zombies Killed")
+```
+Zombies Killed is not normally distributed. 
+
+
+```{r}
+hist(zombie$years_of_education, breaks = 20, ylab="Frequency", xlab="Years of Education", main="Histogram of Survivor Education", col = "cyan")
+```
+Years of Education is positively skewed, not a normal distribution. 
+
+```{r}
+qqnorm(zombie$years_of_education, main = "QQ Plot of Survivor Education")
+```
+SUrvivor Education is not normally distributed. 
+
+
+Survivor Education and Number of Zombies Killed are both not normally distributed, and instead have a poisson distribution. 
+
+
+2.e. Now use the sample() function to sample ONE subset of 30 zombies (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you will need to base your estimate of the CIs on some different distribution!
+
+```{r} 
+library(dplyr)
+samp<- sample_n(zombie, 30, replace=FALSE)
+samp 
+```
+
+Mean, standard deviation, and sampling error:
+
+Height: 
+
+```{r}
+mean30<-function(h){sum((samp$height)/30)}
+mean30(h)
+stdev30<-function(h){sqrt((sum((samp$height-((sum(samp$height))/30))^2)/30))}
+stdev30(h)
+seH<- sd(samp$height)/sqrt(30)
+seH
+```
+
+Weight:
+
+```{r}
+mean30<-function(w){sum((samp$weight)/30)}
+mean30(w)
+stdev30<-function(w){sqrt((sum((samp$weight-((sum(samp$weight))/30))^2)/30))}
+stdev30(w)
+seW<- sd(samp$weight)/sqrt(30)
+seW
+```
+
+Age:
+```{r}
+mean30<-function(a){sum((samp$age)/30)}
+mean30(a)
+stdev30<-function(a){sqrt((sum((samp$age-((sum(samp$age))/30))^2)/30))}
+stdev30(a)
+seA<- sd(samp$age)/sqrt(30)
+seA
+```
+
+Zombies Killed:
+
+```{r}
+mean30<-function(zk){sum((samp$zombies_killed)/30)}
+mean30(zk)
+stdev30<-function(zk){sqrt((sum((samp$zombies_killed-((sum(samp$zombies_killed))/30))^2)/30))}
+stdev30(zk)
+seZK<- sd(samp$zombies_killed)/sqrt(30)
+seZK
+```
+
+Years of Education:
+
+```{r}
+mean30<-function(ed){sum((samp$years_of_education)/30)}
+mean30(ed)
+stdev30<-function(ed){sqrt((sum((samp$years_of_education-((sum(samp$years_of_education))/30))^2)/30))}
+stdev30(ed)
+seED<- sd(samp$years_of_education)/sqrt(30)
+seED
+```
+
+Confidence Intervals: 
+
+Height:
+```{r}
+se<- function(x){sd(x)/sqrt(30)}
+qnorm(0.975, mean = mean(samp$height), sd = sd(samp$height))
+upperheight <- mean(samp$height) + qnorm(0.975) * se(samp$height)
+lowerheight <- mean(samp$height) - qnorm(0.975) * se(samp$height)
+ciheight <- c(lowerheight, upperheight)
+ciheight
+```
+
+Weight:
+```{r}
+se<- function(x){sd(x)/sqrt(30)}
+qnorm(0.975, mean = mean(samp$weight), sd = sd(samp$weight))
+upperweight <- mean(samp$weight) + qnorm(0.975) * se(samp$weight)
+lowerweight <- mean(samp$weight) - qnorm(0.975) * se(samp$weight)
+ciweight <- c(lowerweight, upperweight)
+ciweight
+```
+
+Age:
+```{r}
+se<- function(x){sd(x)/sqrt(30)}
+qnorm(0.975, mean = mean(samp$age), sd = sd(samp$age))
+upperage <- mean(samp$age) + qnorm(0.975) * se(samp$age)
+lowerage <- mean(samp$age) - qnorm(0.975) * se(samp$age)
+ciage <- c(lowerage, upperage)
+ciage
+```
+
+Zombies Killed: 
+```{r}
+qpois(0.975, lambda = mean(samp$zombies_killed))
+upperzombies <- mean(samp$zombies_killed) + qpois(0.975, lambda = mean(samp$zombies_killed)) * se(samp$zombies_killed)
+lowerzombies <- mean(samp$zombies_killed) - qpois(0.975, lambda = mean(samp$zombies_killed)) * se(samp$zombies_killed)
+cizombies <- c(lowerzombies, upperzombies)
+cizombies
+```
+
+Years of Education:
+```{r}
+qpois(0.975, lambda = mean(samp$years_of_education))
+upperyears <- mean(samp$years_of_education) + qpois(0.975, lambda = mean(samp$years_of_education)) * se(samp$years_of_education)
+loweryears <- mean(samp$years_of_education) - qpois(0.975, lambda = mean(samp$years_of_education)) * se(samp$years_of_education)
+ciyears <- c(loweryears, upperyears)
+ciyears
+```
+
+
+2.f. Now draw 99 more random samples of 30 zombies out and calculate the mean for each of the these samples. Together with the first sample you drew out, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of the sampling distribution for each variable? How do the standard deviations compare to the standard errors estimated in [2.e.]? What do these sampling distributions look like? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?
+
+
+```{r}
+library(dplyr)
+k<- 99
+n<- 30
+totalmn <- data.frame()
+totalsd <- data.frame()
+for(i in 1:k){
+   mn <- sample_n(zombie, n, replace= FALSE)
+   Height <- mean(mn$height)
+   Age <- mean(mn$age)
+   Weight <- mean(mn$weight)
+   Zombies_Killed <- mean(mn$zombies_killed)
+   Years_of_Ed <- mean(mn$years_of_education)
+   remn <- cbind(Height, Weight, Age, Zombies_Killed, Years_of_Ed)
+   totalmn <- rbind(totalmn,remn)
+}
+for(i in 1:k){
+  stdv <- sample_n(zombie, n, replace = FALSE)
+  sdH <- sqrt((sum((stdv$height-((sum(stdv$height))/30))^2)/30))
+  sdW <- sqrt((sum((stdv$weight-((sum(stdv$weight))/30))^2)/30))
+  sdA <- sqrt((sum((stdv$age-((sum(stdv$age))/30))^2)/30))
+  sdZK <- sqrt((sum((stdv$zombies_killed-((sum(stdv$zombies_killed))/30))^2)/30))
+  sdED <- sqrt((sum((stdv$years_of_education-((sum(stdv$years_of_education))/30))^2)/30))
+  resd <- cbind(sdH, sdW, sdA, sdZK, sdED)
+  totalsd <- rbind(totalsd, resd)
+}
+```
+
+Means and standard distributions for each variable:
+```{r}
+fMN <- colSums(totalmn, na.rm = TRUE, dims = 1)/n
+fSD <- colSums(totalsd, na.rm = TRUE, dim = 1)/n
+final <- cbind(fMN, fSD)
+final
+```
+
+Standard Error of the five variables from the large sample size: 
+```{r} 
+final_seH <- sqrt(sdH^2/n)
+final_seW <- sqrt(sdW^2/n)
+final_seA <- sqrt(sdA^2/n)
+final_seZK <- sqrt(sdZK^2/n)
+final_seED <- sqrt(sdED^2/n)
+final_seH
+final_seW
+final_seA
+final_seZK
+final_seED
+```
+Standard error from the smaller sample size: 
+```{r}
+seH
+seW
+seA
+seZK
+seED
+```
+The standard errors from the larger sample size are similar to those of the smaller sample size, though not identical. 
+
+
+Sampling Distributions for the Five Variables
+```{r}
+hist(totalmn$Height, breaks= 20, xlab="Survivor Height", ylab = "Frequency", main= "Sampling Distribution of Survivor Height", col="violet")
+hist(totalmn$Weight, breaks = 20, xlab="Survivor Weight", ylab = "Frequency", main= "Sampling Distribution of Survivor Weight", col="cyan")
+hist(totalmn$Age, breaks = 20, xlab="Survivor Age", ylab = "Frequency", main= "Sampling Distribution of Survivor Age", col= "green")
+hist(totalmn$Zombies_Killed, breaks = 20, xlab="Number of Zombies Killed", ylab = "Frequency", main= "Sampling Distribution of Zombies Killed", col= "magenta")
+hist(totalmn$Years_of_Ed, breaks = 20, xlab="Years of Survivor Education", ylab = "Frequency", main= "Sampling Distribution of Years of Survivor Education", col="orange")
+```
+The sampling distributions of the variables that were already normally distributed, surprisingly, seem to be less normally distributed than with a smaller sample. This is unexpected. The two variables that were not previously normally distributed (Years of Education and ZOmbies Killed) are stil not normally distributed, but are becoming more normalized compared to the smaller sample. 
+
